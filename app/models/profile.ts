@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
-
+import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import User from './user.js'
+import * as relations from '@adonisjs/lucid/types/relations'
 enum Gender {
   MALE = 'MALE',
-  FEMALE = 'FEMALE'
+  FEMALE = 'FEMALE',
 }
 
 export default class Profile extends BaseModel {
@@ -24,10 +25,15 @@ export default class Profile extends BaseModel {
 
   @column.dateTime()
   declare dateOfBirth: DateTime
-  
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @belongsTo(() => User, {
+    foreignKey: 'userId',
+  })
+  declare user: relations.BelongsTo<typeof User>
 }
